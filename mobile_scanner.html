@@ -1,0 +1,2274 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+<title>Engineering Store</title>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+
+<!-- ICON LIBRARY -->
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+
+<script src="https://unpkg.com/html5-qrcode"></script>
+
+
+<style>
+
+
+*{
+
+box-sizing:border-box;
+font-family:'Segoe UI',Arial;
+
+}
+
+
+
+body{
+
+margin:0;
+background:#f4f5f7;
+color:#333;
+
+}
+
+
+
+.header{
+
+background:#b5121b;
+color:white;
+padding:18px;
+text-align:center;
+font-size:24px;
+font-weight:bold;
+
+}
+
+
+
+.container{
+
+padding:15px;
+padding-bottom:90px;
+
+}
+
+
+
+.card{
+
+background:white;
+border-radius:15px;
+padding:18px;
+margin-bottom:15px;
+box-shadow:0 4px 12px #ccc;
+
+}
+
+
+
+.button{
+
+width:100%;
+padding:15px;
+border:none;
+border-radius:12px;
+background:#b5121b;
+color:white;
+font-size:17px;
+margin-top:10px;
+
+}
+
+
+
+.button i{
+
+margin-right:8px;
+
+}
+
+
+
+.button:disabled{
+
+background:#999;
+
+}
+
+
+
+input,select{
+
+width:100%;
+padding:13px;
+margin-top:10px;
+border-radius:10px;
+border:1px solid #ccc;
+font-size:16px;
+
+}
+
+
+
+.hidden{
+
+display:none;
+
+}
+
+
+
+#reader{
+
+width:300px;
+margin:auto;
+
+}
+
+
+
+table{
+
+width:100%;
+border-collapse:collapse;
+margin-top:10px;
+
+}
+
+
+
+th{
+
+background:#b5121b;
+color:white;
+
+}
+
+
+
+td,th{
+
+padding:10px;
+border:1px solid #ddd;
+
+}
+
+
+
+.nav{
+
+position:fixed;
+bottom:0;
+left:0;
+width:100%;
+background:white;
+display:flex;
+justify-content:space-around;
+padding:10px;
+box-shadow:0 -2px 8px #aaa;
+
+}
+
+
+
+.nav button{
+
+border:none;
+background:white;
+font-size:13px;
+
+}
+
+
+
+.nav i{
+
+font-size:20px;
+
+}
+
+
+
+.bin{
+
+background:#e9f5e9;
+padding:15px;
+border-radius:10px;
+font-weight:bold;
+
+}
+
+
+
+.stat{
+
+display:flex;
+justify-content:space-between;
+
+}
+
+
+
+.stat-box{
+
+width:48%;
+background:#fff;
+padding:15px;
+border-radius:12px;
+box-shadow:0 3px 8px #ccc;
+text-align:center;
+
+}
+
+
+
+.stat-number{
+
+font-size:25px;
+font-weight:bold;
+color:#b5121b;
+
+}
+
+
+
+.alert{
+
+background:#ffe5e5;
+border-left:5px solid #b5121b;
+padding:12px;
+border-radius:8px;
+
+}
+
+
+
+</style>
+
+</head>
+
+
+<body>
+
+
+<div class="header">
+
+<i class="fa-solid fa-gears"></i>
+
+Engineering Store
+
+</div>
+
+
+
+<div class="container">
+
+
+<!-- HOME -->
+
+
+<div id="home">
+
+
+<div class="card">
+
+
+<h3>
+
+Welcome Store Operator
+
+</h3>
+
+
+<p>
+
+Digital Engineering Store Management
+
+</p>
+
+
+</div>
+
+
+
+<div class="stat">
+
+
+<div class="stat-box">
+
+
+Total Items
+
+<div class="stat-number"
+id="totalItems">
+
+--
+
+</div>
+
+
+</div>
+
+
+
+<div class="stat-box">
+
+
+Low Stock
+
+<div class="stat-number"
+id="lowStock">
+
+--
+
+</div>
+
+
+</div>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<button class="button"
+onclick="openPage('scan')">
+
+<i class="fa-solid fa-qrcode"></i>
+
+Scan Bin
+
+</button>
+
+
+<button class="button"
+onclick="openPage('search')">
+
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+Search Item
+
+</button>
+
+
+<button class="button"
+onclick="openPage('issue')">
+
+
+<i class="fa-solid fa-box-open"></i>
+
+Issue Stock
+
+</button>
+
+
+<button class="button"
+onclick="openPage('receive')">
+
+
+<i class="fa-solid fa-box"></i>
+
+Receive Stock
+
+</button>
+
+<button class="button"
+onclick="exportStock()">
+
+<i class="fa-solid fa-file-excel"></i>
+
+Export Latest Stock
+
+</button>
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+<!-- SCAN PAGE -->
+
+
+<div id="scan" class="hidden">
+
+
+<div class="card">
+
+
+<h3>
+
+<i class="fa-solid fa-camera"></i>
+
+Scan Bin Barcode
+
+</h3>
+
+
+<div id="reader"></div>
+
+
+<button class="button"
+onclick="startScanner()">
+
+
+<i class="fa-solid fa-camera"></i>
+
+START SCANNER
+
+
+</button>
+
+
+</div>
+
+
+
+<div class="card">
+
+
+<h3>
+
+Current Bin
+
+</h3>
+
+
+<div id="currentBin"
+class="bin">
+
+No Bin Scanned
+
+</div>
+
+
+</div>
+
+
+
+<div class="card"
+id="scanResult">
+
+
+Scan result will appear here
+
+
+</div>
+
+
+
+</div>
+<!-- SEARCH PAGE -->
+
+<div id="search" class="hidden">
+
+
+<div class="card">
+
+
+<h3>
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+Search Item
+
+</h3>
+
+
+
+<input id="searchBox"
+
+placeholder="Enter item name">
+
+
+
+<button class="button"
+
+onclick="searchItem()">
+
+
+<i class="fa-solid fa-search"></i>
+
+SEARCH
+
+
+</button>
+
+
+</div>
+
+
+
+<div class="card"
+
+id="searchResult">
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+<!-- ISSUE STOCK -->
+
+
+<div id="issue" class="hidden">
+
+
+<div class="card">
+
+
+<h3>
+
+<i class="fa-solid fa-arrow-up-right-dots"></i>
+
+Issue Stock
+
+</h3>
+
+
+
+<div class="bin"
+
+id="issueBinDisplay">
+
+Scan bin first
+
+</div>
+
+
+
+
+<select id="issueItem">
+
+
+<option>
+
+Select Item
+
+</option>
+
+
+</select>
+
+
+
+
+<input
+
+id="issueQty"
+
+type="number"
+
+placeholder="Enter quantity">
+
+
+
+
+
+<button class="button"
+
+onclick="issueStock()"
+
+id="issueButton"
+
+disabled>
+
+
+<i class="fa-solid fa-box-open"></i>
+
+ISSUE STOCK
+
+
+</button>
+
+
+</div>
+
+
+
+<div class="card"
+
+id="issueResult">
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- RECEIVE STOCK -->
+
+
+<div id="receive" class="hidden">
+
+
+<div class="card">
+
+
+<h3>
+
+<i class="fa-solid fa-arrow-down"></i>
+
+Receive Stock
+
+</h3>
+
+
+
+<div class="bin"
+
+id="receiveBinDisplay">
+
+
+Scan bin first
+
+
+</div>
+
+
+
+<button class="button"
+style="background:#2e7d32;"
+onclick="toggleEmptyBins()">
+
+<i class="fa-solid fa-box-archive"></i>
+
+VIEW EMPTY BINS
+
+</button>
+
+
+
+<div id="emptyBinsPanel" class="hidden">
+
+<div id="emptyBinsSummary"
+style="margin-top:10px;font-weight:bold;">
+</div>
+
+<div id="emptyBinsList"
+style="max-height:220px;overflow-y:auto;margin-top:10px;">
+</div>
+
+<button class="button"
+onclick="startEmptyBinScanner()">
+
+<i class="fa-solid fa-camera"></i>
+
+SCAN AN EMPTY BIN
+
+</button>
+
+<div id="receiveReader"
+style="width:250px;margin:10px auto;"></div>
+
+</div>
+
+
+
+
+<select id="receiveItem"
+onchange="handleReceiveItemChange()">
+
+
+<option value="">
+
+Select Item
+
+</option>
+
+
+</select>
+
+
+
+<input id="newItemName"
+class="hidden"
+placeholder="Enter new item name">
+
+
+
+
+<input
+
+id="receiveQty"
+
+type="number"
+
+placeholder="Enter quantity">
+
+
+
+
+
+<button class="button"
+
+onclick="receiveStock()"
+
+id="receiveButton"
+
+disabled>
+
+
+<i class="fa-solid fa-box"></i>
+
+ADD STOCK
+
+
+</button>
+
+
+
+</div>
+
+
+
+
+<div class="card"
+
+id="receiveResult">
+
+
+</div>
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- NOTIFICATION PAGE -->
+
+
+<div id="notification" class="hidden">
+
+
+<div class="card">
+
+
+<h3>
+
+<i class="fa-solid fa-bell"></i>
+
+Low Stock Alerts
+
+</h3>
+
+
+</div>
+
+
+
+<div id="notificationResult">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+
+<!-- HISTORY PAGE -->
+
+
+<div id="history" class="hidden">
+
+
+<div class="card">
+
+
+<h3>
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+Transaction History
+
+</h3>
+
+
+</div>
+
+
+
+<div id="historyResult">
+
+
+</div>
+
+
+</div>
+
+
+
+
+
+
+
+</div>
+
+
+
+
+
+
+
+<!-- BOTTOM NAVIGATION -->
+
+
+<div class="nav">
+
+
+<button onclick="openPage('home')">
+
+
+<i class="fa-solid fa-house"></i>
+
+<br>
+
+Home
+
+
+</button>
+
+
+
+
+
+<button onclick="openPage('scan')">
+
+
+<i class="fa-solid fa-qrcode"></i>
+
+<br>
+
+Scan
+
+
+</button>
+
+
+
+
+
+<button onclick="openPage('search')">
+
+
+<i class="fa-solid fa-magnifying-glass"></i>
+
+<br>
+
+Search
+
+
+</button>
+
+
+
+
+
+<button onclick="openPage('notification')">
+
+
+<i class="fa-solid fa-bell"></i>
+
+<br>
+
+Alert
+
+
+</button>
+
+
+
+
+
+<button onclick="openPage('history')">
+
+
+<i class="fa-solid fa-clock-rotate-left"></i>
+
+<br>
+
+History
+
+
+</button>
+
+
+
+</div>
+<script>
+
+
+// =====================================
+// API
+// =====================================
+
+
+const API =
+"http://10.188.201.35:8001";
+
+
+
+
+// =====================================
+// GLOBAL VARIABLES
+// =====================================
+
+
+let currentBin = "";
+
+let scanner;
+
+
+
+
+
+
+
+// =====================================
+// PAGE NAVIGATION
+// =====================================
+
+
+function openPage(page){
+
+
+let pages=[
+
+"home",
+"scan",
+"search",
+"issue",
+"receive",
+"notification",
+"history"
+
+];
+
+
+
+pages.forEach(function(p){
+
+document.getElementById(p)
+.classList.add("hidden");
+
+
+});
+
+
+
+document.getElementById(page)
+.classList.remove("hidden");
+
+
+
+if(page=="notification"){
+
+loadNotifications();
+
+}
+
+
+if(page=="history"){
+
+loadHistory();
+
+}
+
+
+if(page=="home"){
+
+loadDashboard();
+
+}
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// LOAD DASHBOARD
+// =====================================
+
+
+function loadDashboard(){
+
+
+fetch(
+
+API+"/dashboard"
+
+)
+
+
+.then(res=>res.json())
+
+
+.then(data=>{
+
+
+document.getElementById(
+"totalItems"
+).innerHTML=data.total_items;
+
+
+
+document.getElementById(
+"lowStock"
+).innerHTML=data.low_stock;
+
+
+
+});
+
+
+}
+
+
+
+
+
+
+loadDashboard();
+
+
+
+
+
+
+
+
+// =====================================
+// SCANNER
+// =====================================
+
+
+function startScanner(){
+
+
+
+if(scanner)
+
+return;
+
+
+
+scanner=new Html5QrcodeScanner(
+
+"reader",
+
+{
+
+fps:10,
+
+qrbox:250
+
+}
+
+);
+
+
+
+scanner.render(scanSuccess);
+
+
+
+}
+
+
+
+
+
+
+function scanSuccess(code){
+
+
+
+currentBin=code;
+
+
+
+document.getElementById(
+"currentBin"
+).innerHTML=code;
+
+
+
+document.getElementById(
+"issueBinDisplay"
+).innerHTML=
+"Current Bin : "+code;
+
+
+
+document.getElementById(
+"receiveBinDisplay"
+).innerHTML=
+"Current Bin : "+code;
+
+
+
+loadBinItems(code);
+
+
+
+fetch(
+
+API+"/scan/"+code
+
+)
+
+
+
+.then(res=>res.json())
+
+
+.then(data=>{
+
+
+
+let html=`
+
+
+<h3>
+
+${data.barcode}
+
+</h3>
+
+
+
+<table>
+
+
+<tr>
+
+<th>
+Item
+</th>
+
+
+<th>
+Quantity
+</th>
+
+
+</tr>
+
+
+`;
+
+
+
+
+data.items.forEach(function(i){
+
+
+
+html+=`
+
+<tr>
+
+<td>
+
+${i.name}
+
+</td>
+
+
+<td>
+
+${i.quantity}
+
+</td>
+
+
+</tr>
+
+
+`;
+
+
+
+});
+
+
+
+html+="</table>";
+
+
+
+document.getElementById(
+"scanResult"
+).innerHTML=html;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// LOAD ITEMS AFTER SCAN
+// =====================================
+
+
+function loadBinItems(barcode){
+
+
+
+fetch(
+
+API+"/bin_items/"+barcode
+
+)
+
+
+.then(res=>res.json())
+
+
+.then(data=>{
+
+
+
+let issueDropdown=
+document.getElementById(
+"issueItem"
+);
+
+
+
+let receiveDropdown=
+document.getElementById(
+"receiveItem"
+);
+
+
+
+
+issueDropdown.innerHTML=
+"<option value=''>Select Item</option>";
+
+
+receiveDropdown.innerHTML=
+"<option value=''>Select Item</option>";
+
+
+
+
+data.forEach(function(item){
+
+
+
+let op1=document.createElement(
+"option"
+);
+
+
+op1.value=item;
+
+op1.text=item;
+
+
+issueDropdown.add(op1);
+
+
+
+
+
+let op2=document.createElement(
+"option"
+);
+
+
+op2.value=item;
+
+op2.text=item;
+
+
+receiveDropdown.add(op2);
+
+
+
+});
+
+
+
+// Always offer the option to receive a brand new item
+// into this bin, even if the bin is currently empty
+
+let newOpt=document.createElement(
+"option"
+);
+
+newOpt.value="__new__";
+
+newOpt.text="+ Add New Item";
+
+receiveDropdown.add(newOpt);
+
+
+document.getElementById(
+"newItemName"
+).classList.add("hidden");
+
+document.getElementById(
+"newItemName"
+).value="";
+
+
+
+document.getElementById(
+"issueButton"
+).disabled=(data.length===0);
+
+
+
+document.getElementById(
+"receiveButton"
+).disabled=false;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// SEARCH
+// =====================================
+
+
+function searchItem(){
+
+
+let item=document.getElementById(
+"searchBox"
+).value;
+
+
+
+fetch(
+
+API+"/search/"+item
+
+)
+
+
+.then(res=>res.json())
+
+
+.then(data=>{
+
+
+
+let html="";
+
+
+
+data.forEach(function(x){
+
+
+
+html+=`
+
+<div class="card">
+
+
+<h3>
+
+${x.item}
+
+</h3>
+
+
+Location:
+
+<br>
+
+${x.location}
+
+
+<br><br>
+
+
+Quantity:
+
+${x.quantity}
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+document.getElementById(
+"searchResult"
+).innerHTML=html;
+
+
+
+});
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// ISSUE STOCK
+// =====================================
+
+
+function issueStock(){
+
+
+
+if(currentBin==""){
+
+
+alert(
+"Please scan bin first"
+);
+
+
+return;
+
+
+}
+
+
+
+let data={
+
+
+
+location_barcode:
+
+currentBin,
+
+
+
+item_name:
+
+document.getElementById(
+"issueItem"
+).value,
+
+
+
+quantity:
+
+Number(
+document.getElementById(
+"issueQty"
+).value
+)
+
+
+
+};
+
+
+
+
+
+fetch(
+
+API+"/issue",
+
+{
+
+
+method:"POST",
+
+
+headers:{
+
+
+"Content-Type":
+
+"application/json"
+
+
+},
+
+
+
+body:
+
+JSON.stringify(data)
+
+
+}
+
+
+)
+
+
+
+.then(res=>res.json())
+
+
+.then(result=>{
+
+
+
+document.getElementById(
+"issueResult"
+).innerHTML=result.message;
+
+
+
+loadDashboard();
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+
+// =====================================
+// EMPTY BINS PANEL
+// =====================================
+
+
+function toggleEmptyBins(){
+
+
+let panel=document.getElementById(
+"emptyBinsPanel"
+);
+
+
+if(panel.classList.contains("hidden")){
+
+
+panel.classList.remove("hidden");
+
+loadEmptyBins();
+
+
+}
+else{
+
+
+panel.classList.add("hidden");
+
+
+}
+
+
+}
+
+
+
+
+function loadEmptyBins(){
+
+
+fetch(
+
+API+"/empty_bins"
+
+)
+
+
+.then(res=>res.json())
+
+
+.then(data=>{
+
+
+document.getElementById(
+"emptyBinsSummary"
+).innerHTML=
+data.empty_bins.length+
+" of "+
+data.total_bins+
+" bins are empty";
+
+
+let html="";
+
+
+data.empty_bins.forEach(function(b){
+
+
+html+=`
+<div style="padding:8px;border-bottom:1px solid #eee;">
+${b}
+</div>
+`;
+
+
+});
+
+
+document.getElementById(
+"emptyBinsList"
+).innerHTML=html;
+
+
+});
+
+
+}
+
+
+
+
+let receiveScanner;
+
+
+function startEmptyBinScanner(){
+
+
+if(receiveScanner)
+
+return;
+
+
+receiveScanner=new Html5QrcodeScanner(
+
+"receiveReader",
+
+{
+
+fps:10,
+
+qrbox:250
+
+}
+
+);
+
+
+receiveScanner.render(function(code){
+
+
+receiveScanner.clear();
+
+receiveScanner=null;
+
+document.getElementById(
+"receiveReader"
+).innerHTML="";
+
+
+currentBin=code;
+
+
+document.getElementById(
+"currentBin"
+).innerHTML=code;
+
+
+document.getElementById(
+"issueBinDisplay"
+).innerHTML=
+"Current Bin : "+code;
+
+
+document.getElementById(
+"receiveBinDisplay"
+).innerHTML=
+"Current Bin : "+code;
+
+
+document.getElementById(
+"emptyBinsPanel"
+).classList.add("hidden");
+
+
+loadBinItems(code);
+
+
+});
+
+
+}
+
+
+
+
+function handleReceiveItemChange(){
+
+
+let val=document.getElementById(
+"receiveItem"
+).value;
+
+
+let newItemInput=document.getElementById(
+"newItemName"
+);
+
+
+if(val==="__new__"){
+
+
+newItemInput.classList.remove("hidden");
+
+newItemInput.focus();
+
+
+}
+else{
+
+
+newItemInput.classList.add("hidden");
+
+newItemInput.value="";
+
+
+}
+
+
+}
+
+
+
+
+// =====================================
+// RECEIVE STOCK
+// =====================================
+
+
+function receiveStock(){
+
+
+
+if(currentBin==""){
+
+
+alert(
+"Please scan bin first"
+);
+
+
+return;
+
+
+}
+
+
+
+
+let selectedItem=
+document.getElementById(
+"receiveItem"
+).value;
+
+
+
+let itemName;
+
+
+
+if(selectedItem==="__new__"){
+
+
+itemName=
+document.getElementById(
+"newItemName"
+).value.trim();
+
+
+if(itemName===""){
+
+alert(
+"Please enter the new item name"
+);
+
+return;
+
+}
+
+
+}
+else{
+
+
+itemName=selectedItem;
+
+
+}
+
+
+
+if(itemName===""){
+
+alert(
+"Please select or enter an item"
+);
+
+return;
+
+}
+
+
+
+let data={
+
+
+
+location_barcode:
+
+currentBin,
+
+
+
+item_name:
+
+itemName,
+
+
+
+quantity:
+
+Number(
+document.getElementById(
+"receiveQty"
+).value
+)
+
+
+
+};
+
+
+
+
+
+
+fetch(
+
+API+"/receive",
+
+{
+
+
+method:"POST",
+
+
+headers:{
+
+
+"Content-Type":
+
+"application/json"
+
+
+},
+
+
+
+body:
+
+JSON.stringify(data)
+
+
+}
+
+
+)
+
+
+
+.then(res=>res.json())
+
+
+.then(result=>{
+
+
+
+document.getElementById(
+"receiveResult"
+).innerHTML=result.message;
+
+
+
+loadDashboard();
+
+
+
+document.getElementById(
+"receiveQty"
+).value="";
+
+document.getElementById(
+"newItemName"
+).classList.add("hidden");
+
+document.getElementById(
+"newItemName"
+).value="";
+
+
+// Refresh this bin\'s item list (it may no longer be empty)
+loadBinItems(currentBin);
+
+
+// Refresh the empty bins list if it is currently open
+if(!document.getElementById(
+"emptyBinsPanel"
+).classList.contains("hidden")){
+
+loadEmptyBins();
+
+}
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+// =====================================
+// LOW STOCK ALERTS
+// =====================================
+
+
+function loadNotifications(){
+
+
+
+fetch(
+
+API+"/notifications"
+
+)
+
+
+.then(res=>res.json())
+
+
+.then(data=>{
+
+
+
+let html="";
+
+
+
+if(data.length==0){
+
+
+html=`
+
+<div class="card">
+
+No Low Stock Alerts
+
+</div>
+
+`;
+
+
+}
+
+else{
+
+
+data.forEach(function(x){
+
+
+html+=`
+
+<div class="card alert">
+
+
+<b>
+
+Low Stock Alert
+
+</b>
+
+
+<br><br>
+
+
+Item:
+
+${x.item}
+
+
+<br>
+
+
+Location:
+
+${x.location}
+
+
+<br>
+
+
+Available:
+
+${x.quantity}
+
+
+<br>
+
+
+Minimum:
+
+${x.minimum_stock}
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+}
+
+
+
+document.getElementById(
+"notificationResult"
+).innerHTML=html;
+
+
+
+});
+
+
+
+}
+
+
+
+
+
+
+
+// =====================================
+// HISTORY
+// =====================================
+
+
+function loadHistory(){
+
+
+
+fetch(
+
+API+"/history"
+
+)
+
+
+
+.then(res=>res.json())
+
+
+.then(data=>{
+
+
+
+let html="";
+
+
+
+data.forEach(function(x){
+
+
+
+let icon="";
+
+
+
+if(x.type=="ISSUE"){
+
+icon="↑";
+
+}
+
+else{
+
+icon="↓";
+
+}
+
+
+
+
+html+=`
+
+<div class="card">
+
+
+<h3>
+
+${icon}
+
+${x.type}
+
+</h3>
+
+
+Item:
+
+${x.item}
+
+
+<br>
+
+
+Location:
+
+${x.location}
+
+
+<br>
+
+
+Quantity:
+
+${x.quantity}
+
+
+<br>
+
+
+Date:
+
+${x.date}
+
+
+
+</div>
+
+
+`;
+
+
+
+});
+
+
+
+
+document.getElementById(
+"historyResult"
+).innerHTML=html;
+
+
+
+});
+
+
+
+}
+function exportStock(){
+
+
+window.open(
+
+API+"/export_stock",
+
+"_blank"
+
+);
+
+
+}
+
+
+</script>
